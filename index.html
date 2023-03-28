@@ -79,18 +79,20 @@
       form.addEventListener('submit', (event) => {
         event.preventDefault();
         const url = document.getElementById('url').value;
-        fetch(`https://api-ssl.bitly.com/v4/shorten`, {
-          method: 'POST',
-          headers: {
-            'Authorization': 'Bearer YOUR_ACCESS_TOKEN',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            long_url: url
-          })
-        })
+        fetch(`https://api.tinyurl.com/create?url=${url}`)
           .then(response => response.json())
           .then(data => {
-            if (data.link) {
-              const shortLink = `https://mysite.netlify.app/${data.id}`;
-              shortUrl.innerHTML = `<a href="${shortLink}" target="_blank
+            if (data.ok) {
+              shortUrl.innerHTML = `<a href="${data.result}" target="_blank">${data.result}</a>`;
+              copyBtn.disabled = false;
+            } else {
+              shortUrl.innerHTML = 'Error: ' + data.error;
+            }
+          })
+          .catch(error => {
+            shortUrl.innerHTML = 'Error: ' + error.message;
+          });
+      });
+      copyBtn.addEventListener('click', (event) => {
+        const shortLink = document.querySelector('#short-url a').href;
+        navigator.clipboard.writeText(shortLink).then(() => {
