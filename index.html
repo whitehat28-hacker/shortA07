@@ -78,7 +78,7 @@
       form.addEventListener('submit', (event) => {
         event.preventDefault();
         const url = document.getElementById('url').value;
-        fetch('https://api.netlify.com/api/v1/shorteners/quick?url=' + url)
+        fetch(`https://tinyurl.com/api-create.php?url=${url}`)
           .then(response => response.json())
           .then(data => {
             shortUrl.innerHTML = `<a href="${data.link}" target="_blank">${data.link}</a>`;
