@@ -1,99 +1,100 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>URL Shortener</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f2f2f2;
-      }
-      form {
-        margin-top: 20px;
-      }
-      label {
-        display: block;
-        margin-bottom: 10px;
-      }
-      input[type="text"] {
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 16px;
-        width: 100%;
-        box-sizing: border-box;
-      }
-      input[type="submit"] {
-        background-color: #0a81ab;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-      }
-      input[type="submit"]:hover {
-        background-color: #0c6d90;
-      }
-      #short-url {
-        margin-top: 20px;
-        font-size: 18px;
-        font-weight: bold;
-        text-align: center;
-        color: #0a81ab;
-      }
-      #copy-btn {
-        display: block;
-        margin: 20px auto 0;
-        background-color: #0a81ab;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-      }
-      #copy-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-      #copy-btn:hover:not([disabled]) {
-        background-color: #0c6d90;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>URL Shortener</h1>
-    <form id="shorten-form">
-      <label for="url">Enter URL:</label>
-      <input type="text" id="url" name="url" placeholder="https://example.com">
-      <input type="submit" value="Shorten URL">
-    </form>
-    <div id="short-url"></div>
-    <button id="copy-btn" disabled>Copy</button>
-    <script>
-      const form = document.getElementById('shorten-form');
-      const shortUrl = document.getElementById('short-url');
-      const copyBtn = document.getElementById('copy-btn');
-      form.addEventListener('submit', (event) => {
-        event.preventDefault();
-        const url = document.getElementById('url').value;
-        fetch(`https://tinyurl.com/api-create.php?url=${url}`)
-          .then(response => response.json())
-          .then(data => {
-            shortUrl.innerHTML = `<a href="${data.link}" target="_blank">${data.link}</a>`;
-            copyBtn.disabled = false;
-          })
-          .catch(error => {
-            shortUrl.innerHTML = 'Error: ' + error.message;
-          });
-      });
-      copyBtn.addEventListener('click', (event) => {
-        const shortLink = document.querySelector('#short-url a').href;
-        navigator.clipboard.writeText(shortLink).then(() => {
-          alert('Short URL copied to clipboard');
-        });
-      });
-    </script>
-  </body>
-</html>
+<head>
+	<meta charset="UTF-8">
+	<title>URL Shortener</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f2f2f2;
+		}
+		form {
+			margin-top: 20px;
+		}
+		label {
+			display: block;
+			margin-bottom: 10px;
+		}
+		input[type="text"] {
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			font-size: 16px;
+			width: 100%;
+			box-sizing: border-box;
+		}
+		input[type="submit"] {
+			background-color: #0a81ab;
+			color: #fff;
+			border: none;
+			border-radius: 5px;
+			padding: 10px 20px;
+			font-size: 16px;
+			cursor: pointer;
+		}
+		input[type="submit"]:hover {
+			background-color: #0c6d90;
+		}
+		#short-url {
+			margin-top: 20px;
+			font-size: 18px;
+			font-weight: bold;
+			text-align: center;
+			color: #0a81ab;
+		}
+		#copy-btn {
+			display: block;
+			margin: 20px auto 0;
+			background-color: #0a81ab;
+			color: #fff;
+			border: none;
+			border-radius: 5px;
+			padding: 10px 20px;
+			font-size: 16px;
+			cursor: pointer;
+		}
+		#copy-btn:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+		#copy-btn:hover:not([disabled]) {
+			background-color: #0c6d90;
+		}
+	</style>
+</head>
+<body>
+	<h1>URL Shortener</h1>
+	<form id="shorten-form">
+		<label for="url">Enter URL:</label>
+		<input type="text" id="url" name="url" placeholder="https://example.com">
+		<input type="submit" value="Shorten URL">
+	</form>
+	<div id="short-url"></div>
+	<button id="copy-btn" disabled>Copy</button>
+	<script>
+		const form = document.getElementById('shorten-form');
+		const shortUrl = document.getElementById('short-url');
+		const copyBtn = document.getElementById('copy-btn');
+
+		function generateShortUrl() {
+			const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+			let short = '';
+			for (let i = 0; i < 8; i++) {
+				short += chars.charAt(Math.floor(Math.random() * chars.length));
+			}
+			return 'https://shorta07.netlify.app/' + short;
+		}
+
+		form.addEventListener('submit', (event) => {
+			event.preventDefault();
+			const url = document.getElementById('url').value;
+			const short = generateShortUrl();
+			shortUrl.innerHTML = `<a href="${short}" target="_blank">${short}</a>`;
+			copyBtn.disabled = false;
+		});
+
+		copyBtn.addEventListener('click', (event) => {
+			const shortLink = document.querySelector('#short-url a').href;
+			navigator.clipboard.writeText(shortLink)
+				.then(() => {
+					copyBtn.innerHTML
